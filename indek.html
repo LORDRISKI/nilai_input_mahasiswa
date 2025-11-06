@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Input Nilai Mahasiswa</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <img src="assets/logo_uin.png" alt="Logo UIN" class="logo">
+    <h1>Aplikasi Input Nilai Mahasiswa</h1>
+  </header>
+
+  <main>
+    <section class="form-section">
+      <h2>Form Input Nilai</h2>
+      <form id="nilaiForm">
+        <input type="text" id="nim" placeholder="NIM" required>
+        <input type="text" id="nama" placeholder="Nama Mahasiswa" required>
+        <input type="text" id="matkul" placeholder="Mata Kuliah" required>
+        <input type="number" id="nilai" placeholder="Nilai" required>
+        <button type="submit" id="btnSimpan">Simpan Nilai</button>
+      </form>
+    </section>
+
+    <section class="tabel-section">
+      <h2>Data Nilai Mahasiswa</h2>
+      <table id="tabelNilai">
+        <thead>
+          <tr>
+            <th>NIM</th>
+            <th>Nama</th>
+            <th>Mata Kuliah</th>
+            <th>Nilai</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <!-- 🔘 Tombol Reset Data -->
+      <button id="btnReset" style="
+        margin-top: 15px;
+        background-color: #c0392b;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      ">
+        🔄 Reset / Hapus Semua Data
+      </button>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 - RPL UIN STS Jambi</p>
+  </footer>
+
+  <!-- 🔥 Firebase Configuration -->
+  <script type="module">
+    import { 
+      initializeApp 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, getDocs, deleteDoc, doc 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAOKOMk2H6-mRY0zu0THAabUpwQ1kTadZ4",
+      authDomain: "nilai-input-mahasiswa-decc9.firebaseapp.com",
+      projectId: "nilai-input-mahasiswa-decc9",
+      storageBucket: "nilai-input-mahasiswa-decc9.appspot.com",
+      messagingSenderId: "125442172771",
+      appId: "1:125442172771:web:e4a15d15873dd52f956",
+      measurementId: "G-PM7S4HLEQ0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    console.log("🔥 Firebase berhasil terhubung");
+
+    const form = document.getElementById("nilaiForm");
+    const tabelBody = document.querySelector("#tabelNilai tbody");
+    const btnReset = document.getElementById("btnReset");
+
+    // 🧩 Simpan data ke Firestore
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const nim = document.getElementById("nim").value;
+      const nama = document.getElementById("nama").value;
+      const matkul = document.getElementById("matkul").value;
+      const nilai = document.getElementById("nilai").value;
+
+      try {
+        await addDoc(collection(db, "nilai_mahasiswa"), {
+          nim,
+          nama,
+          matkul,
+          nilai: parseInt(nilai)
+        });
+        alert("✅ Data berhasil disimpan!");
+        form.reset();
+        loadData();
+      } catch (error) {
+        console.error("❌ Gagal menyimpan:", error);
+      }
+    });
+
+    // 📊 Tampilkan data dari Firestore
+    async function loadData() {
+      tabelBody.innerHTML = "";
+      const querySnapshot = await getDocs(collection(db, "nilai_mahasiswa"));
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const row = `
+          <tr>
+            <td>${data.nim}</td>
+            <td>${data.nama}</td>
+            <td>${data.matkul}</td>
+            <td>${data.nilai}</td>
+          </tr>
+        `;
+        tabelBody.innerHTML += row;
+      });
+    }
+
+    // 🗑️ Tombol Reset - Hapus semua data di Firestore
+    btnReset.addEventListener("click", async () => {
+      if (confirm("⚠️ Apakah Anda yakin ingin menghapus SEMUA data mahasiswa?")) {
+        try {
+          const querySnapshot = await getDocs(collection(db, "nilai_mahasiswa"));
+          for (const docSnap of querySnapshot.docs) {
+            await deleteDoc(doc(db, "nilai_mahasiswa", docSnap.id));
+          }
+          alert("🧹 Semua data berhasil dihapus!");
+          loadData();
+        } catch (error) {
+          console.error("❌ Gagal menghapus data:", error);
+        }
+      }
+    });
+
+    // 🔄 Muat data saat pertama kali halaman dibuka
+    loadData();
+  </script>
+</body>
+</html>

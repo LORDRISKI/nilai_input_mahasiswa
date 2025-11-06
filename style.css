@@ -1,0 +1,96 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f7f9fb;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  background: #004080;
+  color: white;
+  padding: 1rem 0;
+}
+
+.logo {
+  width: 70px;
+  height: auto;
+  margin-bottom: 0.5rem;
+}
+
+main {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  color: #004080;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  background: #004080;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0066cc;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: #004080;
+  color: white;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+.btn-hapus {
+  background-color: #c0392b;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-hapus:hover {
+  background-color: #e74c3c;
+}
